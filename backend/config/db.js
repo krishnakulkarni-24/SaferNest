@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const connectDB = async () => {
   try {
-    const uri = 'mongodb://localhost:27017/safernest';
+    const uri = process.env.MONGO_URI ||'mongodb://localhost:27017/safernest';
     if (!uri) throw new Error('MONGO_URI not set in env');
     await mongoose.connect(uri, {
       useNewUrlParser: true,
@@ -15,4 +15,4 @@ const connectDB = async () => {
   }
 };
 
-module.exports = connectDB;
+export default connectDB;

@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { createHelpRequest, listHelpRequests, acceptHelpRequest, updateHelpRequestStatus } = require('../controllers/helpRequestController');
-const { protect, residentOnly, volunteerOnly, adminOnly } = require('../middleware/auth');
+import { createHelpRequest, listHelpRequests, acceptHelpRequest, updateHelpRequestStatus } from '../controllers/helpRequestController.js';
+import { protect, residentOnly, volunteerOnly, adminOnly } from '../middleware/auth.js';
 
 // Resident creates help request
 router.post('/', protect, residentOnly, createHelpRequest);
@@ -15,6 +15,4 @@ router.post('/:id/accept', protect, volunteerOnly, acceptHelpRequest);
 // Update status: volunteer (own accepted) or admin
 router.put('/:id/status', protect, updateHelpRequestStatus);
 
-module.exports = router;
-
-
+export default router;

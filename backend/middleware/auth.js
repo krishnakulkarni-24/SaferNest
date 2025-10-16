@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/userModel');
+import jwt from 'jsonwebtoken';
+import User from '../models/userModel.js';
 
-exports.protect = async (req, res, next) => {
+export const protect = async (req, res, next) => {
   let token = null;
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
@@ -17,17 +17,17 @@ exports.protect = async (req, res, next) => {
   }
 };
 
-exports.adminOnly = (req, res, next) => {
+export const adminOnly = (req, res, next) => {
   if (req.user && req.user.role === 'admin') return next();
   return res.status(403).json({ message: 'Admin access required' });
 };
 
-exports.volunteerOnly = (req, res, next) => {
+export const volunteerOnly = (req, res, next) => {
   if (req.user && req.user.role === 'volunteer') return next();
   return res.status(403).json({ message: 'Volunteer access required' });
 };
 
-exports.residentOnly = (req, res, next) => {
+export const residentOnly = (req, res, next) => {
   if (req.user && req.user.role === 'resident') return next();
   return res.status(403).json({ message: 'Resident access required' });
 };

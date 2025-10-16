@@ -1,8 +1,8 @@
-const HelpRequest = require('../models/helpRequestModel');
-const Alert = require('../models/alertModel');
+import HelpRequest from '../models/helpRequestModel.js';
+import Alert from '../models/alertModel.js';
 
 // POST /api/help-requests (resident) - create a help request under an alert
-exports.createHelpRequest = async (req, res) => {
+export const createHelpRequest = async (req, res) => {
   try {
     const { alertId, address, location, notes } = req.body;
     const alert = await Alert.findById(alertId);
@@ -30,7 +30,7 @@ exports.createHelpRequest = async (req, res) => {
 };
 
 // GET /api/help-requests (volunteer/admin) - list requests, optionally filter by alert
-exports.listHelpRequests = async (req, res) => {
+export const listHelpRequests = async (req, res) => {
   try {
     const filter = {};
     if (req.query.alertId) filter.alert = req.query.alertId;
@@ -46,7 +46,7 @@ exports.listHelpRequests = async (req, res) => {
 };
 
 // POST /api/help-requests/:id/accept (volunteer) - accept a help request
-exports.acceptHelpRequest = async (req, res) => {
+export const acceptHelpRequest = async (req, res) => {
   try {
     const help = await HelpRequest.findById(req.params.id);
     if (!help) return res.status(404).json({ message: 'Help request not found' });
@@ -67,7 +67,7 @@ exports.acceptHelpRequest = async (req, res) => {
 };
 
 // PUT /api/help-requests/:id/status (volunteer/admin) - update status
-exports.updateHelpRequestStatus = async (req, res) => {
+export const updateHelpRequestStatus = async (req, res) => {
   try {
     const { status } = req.body;
     const allowed = ['pending','accepted','completed','cancelled'];

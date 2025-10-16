@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const helpRequestSchema = new mongoose.Schema({
   alert: { type: mongoose.Schema.Types.ObjectId, ref: 'Alert', required: true },
@@ -16,4 +16,4 @@ const helpRequestSchema = new mongoose.Schema({
 
 helpRequestSchema.index({ location: '2dsphere' }, { sparse: true });
 
-module.exports = mongoose.model('HelpRequest', helpRequestSchema);
+export default mongoose.model('HelpRequest', helpRequestSchema);

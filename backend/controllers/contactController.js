@@ -1,7 +1,7 @@
-const Contact = require('../models/contactModel');
+import Contact from '../models/contactModel.js';
 
 // POST /api/contact/submit - Submit contact form
-exports.submitContact = async (req, res) => {
+export const submitContact = async (req, res) => {
   try {
     const { name, email, message } = req.body;
     
@@ -35,7 +35,7 @@ exports.submitContact = async (req, res) => {
 };
 
 // GET /api/contact/submissions - Get all contact submissions (admin only)
-exports.getContactSubmissions = async (req, res) => {
+export const getContactSubmissions = async (req, res) => {
   try {
     const contacts = await Contact.find()
       .sort({ createdAt: -1 })
@@ -49,7 +49,7 @@ exports.getContactSubmissions = async (req, res) => {
 };
 
 // PUT /api/contact/submissions/:id - Update contact status (admin only)
-exports.updateContactStatus = async (req, res) => {
+export const updateContactStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
@@ -76,7 +76,7 @@ exports.updateContactStatus = async (req, res) => {
 };
 
 // DELETE /api/contact/submissions/:id - Delete contact submission (admin only)
-exports.deleteContactSubmission = async (req, res) => {
+export const deleteContactSubmission = async (req, res) => {
   try {
     const { id } = req.params;
     

@@ -1,35 +1,71 @@
 // server.js
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const dotenv = require('dotenv');
+import express from "express";
+import path from "path";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import cors from "cors";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors({
-  origin: 'http://localhost:4200', // Angular dev server
-  credentials: true
-}));
+// Get __dirname in ES Module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// --- Middleware ---
 app.use(express.json());
 
-// DB Connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+// CORS setup: allow Angular dev server and deployed frontend
+const allowedOrigins = [
+  "http://localhost:4200",            // Angular dev
+  process.env.FRONTEND_URL || ""      // deployed frontend URL from env
+];
 
-// Routes (we'll define these next)
-app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/alerts', require('./routes/alertRoutes'));
-app.use('/api/help-requests', require('./routes/helpRequestRoutes'));
-app.use('/api/contact', require('./routes/contactRoutes'));
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true); // allow server-to-server requests
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg = "CORS policy does not allow access from this origin.";
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
+    credentials: true,
+  })
+);
 
-// Simple root route for health check
-app.get('/', (req, res) => {
-  res.status(200).json({ message: 'SaferNest API is running' });
+// --- MongoDB connection ---
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
+
+// --- API routes ---
+import userRoutes from "./routes/userRoutes.js";
+import alertRoutes from "./routes/alertRoutes.js";
+import helpRequestRoutes from "./routes/helpRequestRoutes.js";
+import contactRoutes from "./routes/contactRoutes.js";
+
+app.use("/api/users", userRoutes);
+app.use("/api/alerts", alertRoutes);
+app.use("/api/help-requests", helpRequestRoutes);
+app.use("/api/contact", contactRoutes);
+
+// --- Serve Angular frontend ---
+const frontendPath = path.join(__dirname, "public", "browser");
+app.use(express.static(frontendPath));
+
+// Fallback route for Angular routing
+app.get("*", (req, res) => {
+  res.sendFile(path.join(frontendPath, "index.html"));
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// --- Start server ---
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+mongoose.connect(process.env.MONGO_URI_D)
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch(err => console.error("❌ MongoDB connection error:", err));

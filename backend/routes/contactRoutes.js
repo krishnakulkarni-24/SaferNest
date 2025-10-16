@@ -1,12 +1,12 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { 
+import { 
   submitContact, 
   getContactSubmissions, 
   updateContactStatus, 
   deleteContactSubmission 
-} = require('../controllers/contactController');
-const { protect, adminOnly } = require('../middleware/auth');
+} from '../controllers/contactController.js';
+import { protect, adminOnly } from '../middleware/auth.js';
 
 // Public route - anyone can submit contact form
 router.post('/submit', submitContact);
@@ -16,4 +16,4 @@ router.get('/submissions', protect, adminOnly, getContactSubmissions);
 router.put('/submissions/:id', protect, adminOnly, updateContactStatus);
 router.delete('/submissions/:id', protect, adminOnly, deleteContactSubmission);
 
-module.exports = router;
+export default router;

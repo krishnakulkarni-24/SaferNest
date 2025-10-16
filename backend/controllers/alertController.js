@@ -1,7 +1,7 @@
-const Alert = require('../models/alertModel');
+import Alert from '../models/alertModel.js';
 
 // POST /api/alerts  (admin)
-exports.createAlert = async (req, res) => {
+export const createAlert = async (req, res) => {
   try {
     const { title, message, type, severity, location, task } = req.body;
     // Location is optional now
@@ -17,7 +17,7 @@ exports.createAlert = async (req, res) => {
 };
 
 // GET /api/alerts  (public)
-exports.getAlerts = async (req, res) => {
+export const getAlerts = async (req, res) => {
   try {
     // Optionally allow query params: ?active=true or ?type=flood
     const filter = {};
@@ -34,7 +34,7 @@ exports.getAlerts = async (req, res) => {
 };
 
 // PUT /api/alerts/:id/deactivate  (admin)
-exports.deactivateAlert = async (req, res) => {
+export const deactivateAlert = async (req, res) => {
   try {
     const alert = await Alert.findById(req.params.id);
     if (!alert) return res.status(404).json({ message: 'Alert not found' });
@@ -47,7 +47,7 @@ exports.deactivateAlert = async (req, res) => {
 };
 
 // PUT /api/alerts/:id  (admin) - edit alert
-exports.updateAlert = async (req, res) => {
+export const updateAlert = async (req, res) => {
   try {
     const { title, message } = req.body;
     let { type, severity, location, task, active } = req.body;
@@ -79,7 +79,7 @@ exports.updateAlert = async (req, res) => {
 };
 
 // POST /api/alerts/:id/accept  (volunteer) - accept task
-exports.acceptTask = async (req, res) => {
+export const acceptTask = async (req, res) => {
   try {
     const alert = await Alert.findById(req.params.id);
     if (!alert) return res.status(404).json({ message: 'Alert not found' });

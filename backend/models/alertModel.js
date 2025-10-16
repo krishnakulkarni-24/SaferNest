@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const alertSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -23,4 +23,4 @@ const alertSchema = new mongoose.Schema({
 
 alertSchema.index({ location: '2dsphere' });
 
-module.exports = mongoose.model('Alert', alertSchema);
+export default mongoose.model('Alert', alertSchema);
