@@ -55,7 +55,7 @@ app.use("/api/help-requests", helpRequestRoutes);
 app.use("/api/contact", contactRoutes);
 
 // --- Serve Angular frontend ---
-const frontendPath = path.join(__dirname, "../frontend/dist/frontend");
+const frontendPath = path.join(__dirname, "frontend", "dist", "frontend");
 app.use(express.static(frontendPath));
 
 // Fallback route for Angular routing
