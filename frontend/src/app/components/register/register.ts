@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { AuthService } from '../../services/auth.service';
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './register.html'
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   form = new FormGroup({
     name: new FormControl(''),
     email: new FormControl(''),
@@ -20,7 +20,20 @@ export class RegisterComponent {
 
   error = '';
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private auth: AuthService, 
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit() {
+    // Read role from query parameters if provided
+    this.route.queryParams.subscribe(params => {
+      if (params['role']) {
+        this.form.patchValue({ role: params['role'] });
+      }
+    });
+  }
 
   submit() {
     this.error = '';

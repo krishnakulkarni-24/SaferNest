@@ -42,11 +42,6 @@
             <h3>Volunteer Network</h3>
             <p>Community support system</p>
           </div>
-          <div class="feature-card">
-            <div class="feature-icon">🌐</div>
-            <h3>Web Platform</h3>
-            <p>Access from any device</p>
-          </div>
         </div>
       </div>
     </div>
@@ -119,7 +114,7 @@
             <li>Community updates</li>
             <li>Emergency contacts</li>
           </ul>
-          <button class="role-button" routerLink="/register">Join as Resident</button>
+          <button class="role-button" [routerLink]="['/register']" [queryParams]="{role: 'resident'}">Join as Resident</button>
         </div>
         
         <div class="role-card featured">
@@ -133,7 +128,7 @@
             <li>Training resources</li>
             <li>Community impact tracking</li>
           </ul>
-          <button class="role-button" routerLink="/register">Join as Volunteer</button>
+          <button class="role-button" [routerLink]="['/register']" [queryParams]="{role: 'volunteer'}">Join as Volunteer</button>
         </div>
         
         <div class="role-card">
@@ -146,7 +141,7 @@
             <li>System monitoring</li>
             <li>Analytics dashboard</li>
           </ul>
-          <button class="role-button" routerLink="/register">Join as Admin</button>
+          <button class="role-button" [routerLink]="['/register']" [queryParams]="{role: 'admin'}">Join as Admin</button>
         </div>
       </div>
     </div>

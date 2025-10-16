@@ -6,8 +6,8 @@ const alertSchema = new mongoose.Schema({
   type: { type: String, enum: ['flood','earthquake','fire','storm','other'], default: 'other' },
   severity: { type: String, enum: ['low','medium','high','critical'], default: 'medium' },
   location: {
-    type: { type: String, enum: ['Point'], default: 'Point' },
-    coordinates: { type: [Number] } // [lng, lat]
+    type: Object,
+    default: {} // [lng, lat]
   },
   // Optional task details assigned by admin for volunteers
   task: {
