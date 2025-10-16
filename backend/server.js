@@ -16,12 +16,12 @@ const __dirname = path.dirname(__filename);
 
 // --- Middleware ---
 app.use(express.json());
-
+app.use(cors()); // frontend and backend on same server → no CORS issue
 // CORS setup: allow Angular dev server and deployed frontend
-const allowedOrigins = [
+/*const allowedOrigins = [
   "http://localhost:4200",            // Angular dev
   process.env.FRONTEND_URL || ""      // deployed frontend URL from env
-];
+];*/
 
 app.use(
   cors({
@@ -62,10 +62,3 @@ app.use(express.static(frontendPath));
 app.get("*", (req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
-
-// --- Start server ---
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-mongoose.connect(process.env.MONGO_URI_D)
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch(err => console.error("❌ MongoDB connection error:", err));
