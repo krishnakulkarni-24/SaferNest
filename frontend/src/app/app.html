@@ -1,0 +1,51 @@
+<nav class="topnav">
+  <div class="brand">
+    <a [routerLink]="auth.getUser() ? (auth.getUser()?.role==='admin' ? '/admin-dashboard' : (auth.getUser()?.role==='volunteer' ? '/volunteer-dashboard' : '/resident-dashboard')) : '/'" class="brand-link">SaferNest</a>
+  </div>
+  <div class="right">
+    <a *ngIf="auth.getUser()" class="dash" [routerLink]="auth.getUser()?.role==='admin' ? '/admin-dashboard' : (auth.getUser()?.role==='volunteer' ? '/volunteer-dashboard' : '/resident-dashboard')" routerLinkActive="active">Dashboard</a>
+    <div class="links" *ngIf="!isDashboard()">
+      <a *ngIf="!auth.getUser()" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+      <a *ngIf="!auth.getUser()" routerLink="/about" routerLinkActive="active">About</a>
+      <a routerLink="/alerts" routerLinkActive="active">Alerts</a>
+      <a routerLink="/training" routerLinkActive="active">Training</a>
+      <a *ngIf="!auth.getUser()" routerLink="/contact" routerLinkActive="active">Contact</a>
+    </div>
+    <div class="links" *ngIf="isDashboard()">
+      <a routerLink="/alerts" routerLinkActive="active">Alerts</a>
+      <a routerLink="/training" routerLinkActive="active">Training</a>
+    </div>
+    <div class="user">
+      <ng-container *ngIf="auth.getUser(); else loggedOut">
+        <a routerLink="/profile" class="user-link" routerLinkActive="active">Profile</a>
+        <button (click)="logout()" class="btn-link">Logout</button>
+      </ng-container>
+      <ng-template #loggedOut>
+        <a routerLink="/login" class="user-link" routerLinkActive="active">Login</a>
+        <a routerLink="/register" class="user-link" routerLinkActive="active">Register</a>
+      </ng-template>
+    </div>
+  </div>
+</nav>
+<div class="content">
+  <router-outlet></router-outlet>
+  </div>
+<footer class="footer">
+  <div class="footer-card">
+    <div class="footer-content">
+      <div class="footer-left">
+        <div class="footer-logo">
+          <div class="footer-logo-icon">🛡️</div>
+          <span class="footer-brand">SaferNest</span>
+        </div>
+        <p class="footer-tagline">Building Safer Communities Together</p>
+      </div>
+      
+      <div class="footer-right">
+        <div class="footer-copyright">
+          <span>© 2024 SaferNest. All rights reserved.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,11 @@
+[
+  {
+    "type": "requestfailed",
+    "url": "http://localhost:4200/",
+    "error": "net::ERR_CONNECTION_REFUSED"
+  },
+  {
+    "type": "goto_error",
+    "text": "net::ERR_CONNECTION_REFUSED at http://localhost:4200"
+  }
+]

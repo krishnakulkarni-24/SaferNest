@@ -1,0 +1,31 @@
+form {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  gap: 10px;
+}
+
+input, select, textarea, button {
+  padding: 8px;
+  font-size: 15px;
+}
+
+button {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:disabled {
+  background-color: gray;
+}
+
+.success-message {
+  color: green;
+}
+
+.error-message {
+  color: red;
+}

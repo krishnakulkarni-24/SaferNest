@@ -1,0 +1,96 @@
+<div class="page">
+  <h2 style="margin: 0 0 12px 0">Active Alerts</h2>
+
+  <div class="card">
+    <div style="display:flex; gap:12px; flex-wrap: wrap;">
+      <div>
+        <label>Type</label>
+        <select [(ngModel)]="type" (ngModelChange)="applyFilter()">
+          <option value="">All</option>
+          <option value="flood">Flood</option>
+          <option value="earthquake">Earthquake</option>
+          <option value="fire">Fire</option>
+          <option value="storm">Storm</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div>
+        <label>Severity</label>
+        <select [(ngModel)]="severity" (ngModelChange)="applyFilter()">
+          <option value="">All</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+          <option value="critical">Critical</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="filtered.length === 0" class="card" style="margin-top:12px">No matching alerts. Stay safe!</div>
+  <div *ngFor="let alert of filtered; trackBy: trackById" class="card" style="margin-top:12px">
+    <div style="display:flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;">
+      <strong style="font-size: 18px;">{{ alert.title }}</strong>
+      <span class="muted">Severity: {{ alert.severity }} | Type: {{ alert.type }} <span *ngIf="alert.task?.title">| Task: {{ alert.task.title }}</span> <span *ngIf="alert.volunteersAccepted?.length">| Accepted: {{ alert.volunteersAccepted.length }}</span></span>
+    </div>
+    <p style="margin: 8px 0 0 0">{{ alert.message }}</p>
+
+    <!-- Volunteer actions -->
+    <div *ngIf="auth.getUser()?.role === 'volunteer' && alert.active" style="margin-top:8px; display:flex; gap:8px; flex-wrap: wrap; align-items: center;">
+      <button *ngIf="alert.task?.title || alert.task?.description" (click)="acceptTask(alert)">Accept Task</button>
+      <span *ngIf="!(alert.task?.title || alert.task?.description)" class="muted">No task assigned for this alert.</span>
+    </div>
+
+    <!-- Resident actions: Need Help -->
+    <div *ngIf="auth.getUser()?.role === 'resident' && alert.active" style="margin-top:8px;">
+      <div *ngIf="needHelpAlertId !== alert._id">
+        <button (click)="openHelp(alert)">Need Help</button>
+      </div>
+      <div *ngIf="needHelpAlertId === alert._id">
+        <label>Your Address</label>
+        <input [(ngModel)]="help.address" placeholder="Enter address or location" />
+        <div style="margin-top:8px; display:flex; gap:8px;">
+          <button (click)="submitHelp(alert)" [disabled]="!help.address">Submit Request</button>
+          <button type="button" (click)="cancelHelp()">Cancel</button>
+        </div>
+        <div *ngIf="helpError" style="color: var(--danger); margin-top:6px;">{{ helpError }}</div>
+      </div>
+    </div>
+
+    <!-- Admin actions: Edit / Deactivate -->
+    <div *ngIf="auth.getUser()?.role === 'admin'" style="margin-top:8px; display:flex; gap:8px; flex-wrap: wrap;">
+      <button (click)="deactivate(alert)" [disabled]="alert.active === false">Deactivate</button>
+      <button *ngIf="editingId !== alert._id" (click)="beginEdit(alert)">Edit</button>
+    </div>
+    <div *ngIf="editingId === alert._id" style="margin-top:8px; display:grid; gap:8px;">
+      <label>Title</label>
+      <input [(ngModel)]="editModel.title" />
+      <label>Message</label>
+      <textarea [(ngModel)]="editModel.message"></textarea>
+      <label>Type</label>
+      <select [(ngModel)]="editModel.type">
+        <option value="flood">Flood</option>
+        <option value="earthquake">Earthquake</option>
+        <option value="fire">Fire</option>
+        <option value="storm">Storm</option>
+        <option value="other">Other</option>
+      </select>
+      <label>Severity</label>
+      <select [(ngModel)]="editModel.severity">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+        <option value="critical">Critical</option>
+      </select>
+      <label>Task Title (optional)</label>
+      <input [(ngModel)]="editModel.task.title" />
+      <label>Task Description (optional)</label>
+      <textarea [(ngModel)]="editModel.task.description"></textarea>
+      <div style="display:flex; gap:8px;">
+        <button (click)="saveEdit(alert)">Save</button>
+        <button type="button" (click)="cancelEdit()">Cancel</button>
+      </div>
+      <div *ngIf="saveError" style="color: var(--danger);">{{ saveError }}</div>
+    </div>
+  </div>
+</div>

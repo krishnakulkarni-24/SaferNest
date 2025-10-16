@@ -1,0 +1,100 @@
+<div class="page">
+  <div class="register-card">
+    <div class="register-header">
+      <div class="logo">
+        <div class="logo-icon">🛡️</div>
+        <h1>SaferNest</h1>
+      </div>
+      <p class="register-subtitle">Join our community and help keep everyone safe</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="register-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name" class="form-label">
+            <span class="label-icon">👤</span>
+            Full Name
+          </label>
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              id="name"
+              formControlName="name" 
+              placeholder="Enter your full name"
+              class="form-input"
+              [class.error]="form.get('name')?.invalid && form.get('name')?.touched"
+              required 
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email" class="form-label">
+          <span class="label-icon">📧</span>
+          Email Address
+        </label>
+        <div class="input-wrapper">
+          <input 
+            type="email" 
+            id="email"
+            formControlName="email" 
+            placeholder="Enter your email"
+            class="form-input"
+            [class.error]="form.get('email')?.invalid && form.get('email')?.touched"
+            required 
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">
+          <span class="label-icon">🔒</span>
+          Password
+        </label>
+        <div class="input-wrapper">
+          <input 
+            type="password" 
+            id="password"
+            formControlName="password" 
+            placeholder="Create a strong password"
+            class="form-input"
+            [class.error]="form.get('password')?.invalid && form.get('password')?.touched"
+            required 
+          />
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="role" class="form-label">
+          <span class="label-icon">🎯</span>
+          Select Your Role
+        </label>
+        <div class="select-wrapper">
+          <select formControlName="role" id="role" class="form-select">
+            <option value="resident">🏠 Resident - I live in this community</option>
+            <option value="volunteer">🤝 Volunteer - I want to help others</option>
+            <option value="admin">⚙️ Admin - I manage the system</option>
+          </select>
+        </div>
+      </div>
+
+      <div *ngIf="error" class="error-message">
+        <div class="error-icon">⚠️</div>
+        {{ error }}
+      </div>
+      
+      <button type="submit" class="register-button" [disabled]="form.invalid">
+        <span class="button-text">Create Account</span>
+        <div class="button-icon">✨</div>
+      </button>
+    </form>
+
+    <div class="register-footer">
+      <p class="login-text">
+        Already have an account?
+        <a routerLink="/login" class="login-link">Sign in here</a>
+      </p>
+    </div>
+  </div>
+</div>

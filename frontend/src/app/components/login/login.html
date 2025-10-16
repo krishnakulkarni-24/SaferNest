@@ -1,0 +1,66 @@
+<div class="page">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo">
+        <div class="logo-icon">🛡️</div>
+        <h1>SaferNest</h1>
+      </div>
+      <p class="login-subtitle">Welcome back! Please sign in to your account</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
+      <div class="form-group">
+        <label for="email" class="form-label">
+          <span class="label-icon">📧</span>
+          Email Address
+        </label>
+        <div class="input-wrapper">
+          <input 
+            type="email" 
+            id="email"
+            formControlName="email" 
+            required 
+            placeholder="Enter your email"
+            class="form-input"
+            [class.error]="form.get('email')?.invalid && form.get('email')?.touched"
+          />
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="password" class="form-label">
+          <span class="label-icon">🔒</span>
+          Password
+        </label>
+        <div class="input-wrapper">
+          <input 
+            type="password" 
+            id="password"
+            formControlName="password" 
+            required 
+            placeholder="Enter your password"
+            class="form-input"
+            [class.error]="form.get('password')?.invalid && form.get('password')?.touched"
+          />
+        </div>
+      </div>
+
+      <div *ngIf="error" class="error-message">
+        <div class="error-icon">⚠️</div>
+        {{ error }}
+      </div>
+      
+      <button type="submit" class="login-button" [disabled]="form.invalid">
+        <span class="button-text">Sign In</span>
+        <div class="button-icon">→</div>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p class="register-text">
+        Don't have an account?
+        <a routerLink="/register" class="register-link">Create one here</a>
+      </p>
+    </div>
+  </div>
+</div>
