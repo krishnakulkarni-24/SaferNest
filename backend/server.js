@@ -16,12 +16,11 @@ const __dirname = path.dirname(__filename);
 
 // --- Middleware ---
 app.use(express.json());
-app.use(cors()); // frontend and backend on same server → no CORS issue
 // CORS setup: allow Angular dev server and deployed frontend
-/*const allowedOrigins = [
+const allowedOrigins = [
   "http://localhost:4200",            // Angular dev
   process.env.FRONTEND_URL || ""      // deployed frontend URL from env
-];*/
+];
 
 app.use(
   cors({
@@ -61,4 +60,11 @@ app.use(express.static(frontendPath));
 // Fallback route for Angular routing
 app.get("*", (req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
+});
+// --- Start server ---
+const PORT = process.env.PORT || 5000;
+
+// Bind to all network interfaces (0.0.0.0) so it works locally and on Render
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
