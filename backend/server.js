@@ -17,7 +17,7 @@ const __dirname = path.dirname(__filename);
 // --- Middleware ---
 app.use(express.json());
 // CORS setup: allow Angular dev server and deployed frontend
-const allowedOrigins = [
+/*const allowedOrigins = [
   "http://localhost:4200",            // Angular dev
   process.env.FRONTEND_URL || ""      // deployed frontend URL from env
 ];
@@ -34,8 +34,9 @@ app.use(
     },
     credentials: true,
   })
-);
+);*/
 
+app.use(cors({ credentials: true }));
 // --- MongoDB connection ---
 mongoose
   .connect(process.env.MONGO_URI)
