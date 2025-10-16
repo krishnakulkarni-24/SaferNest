@@ -55,13 +55,14 @@ app.use("/api/help-requests", helpRequestRoutes);
 app.use("/api/contact", contactRoutes);
 
 // --- Serve Angular frontend ---
-const frontendPath = path.join(__dirname, "../frontend/dist/frontend");
+const frontendPath = path.join(__dirname, "../frontend/dist/frontend/browser");
 app.use(express.static(frontendPath));
 
 // Fallback route for Angular routing
 app.get("*", (req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
+
 // --- Start server ---
 const PORT = process.env.PORT || 5000;
 
