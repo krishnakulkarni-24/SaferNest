@@ -16,30 +16,12 @@ const __dirname = path.dirname(__filename);
 
 // --- Middleware ---
 app.use(express.json());
-// CORS setup: allow Angular dev server and deployed frontend
-/*const allowedOrigins = [
-  "http://localhost:4200",            // Angular dev
-  process.env.FRONTEND_URL || ""      // deployed frontend URL from env
-];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // allow server-to-server requests
-      if (allowedOrigins.indexOf(origin) === -1) {
-        const msg = "CORS policy does not allow access from this origin.";
-        return callback(new Error(msg), false);
-      }
-      return callback(null, true);
-    },
-    credentials: true,
-  })
-);*/
 
 app.use(cors({ credentials: true }));
 // --- MongoDB connection ---
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI||'mongodb://localhost:27017/safernest' )
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
