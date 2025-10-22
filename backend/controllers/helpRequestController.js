@@ -5,21 +5,33 @@ import Alert from '../models/alertModel.js';
 export const createHelpRequest = async (req, res) => {
   try {
     const { alertId, address, location, notes } = req.body;
-    const alert = await Alert.findById(alertId);
-    if (!alert || !alert.active) return res.status(400).json({ message: 'Invalid or inactive alert' });
-    
+    console.log('[HelpRequest] create', { hasAlertId: !!alertId, address: !!address, hasLocation: !!(location && location.coordinates), notes: !!notes });
+
     const helpData = {
-      alert: alertId,
       resident: req.user.id,
       address,
       notes
     };
-    
+
+    // If an alertId is provided, prefer to link to an active alert; otherwise gracefully proceed without linking
+    if (alertId) {
+      try {
+        const alert = await Alert.findById(alertId);
+        if (alert && alert.active) {
+          helpData.alert = alertId;
+        } else {
+          console.warn('[HelpRequest] alertId provided but invalid or inactive — proceeding without linking');
+        }
+      } catch (e) {
+        console.warn('[HelpRequest] alert lookup error — proceeding without linking');
+      }
+    }
+
     // Only include location if it's provided with valid coordinates
     if (location && location.coordinates && Array.isArray(location.coordinates) && location.coordinates.length === 2) {
       helpData.location = location;
     }
-    
+
     const help = new HelpRequest(helpData);
     await help.save();
     res.status(201).json({ message: 'Help request submitted', help });

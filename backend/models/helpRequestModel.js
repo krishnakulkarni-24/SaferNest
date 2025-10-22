@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 
 const helpRequestSchema = new mongoose.Schema({
-  alert: { type: mongoose.Schema.Types.ObjectId, ref: 'Alert', required: true },
+  // Alert is optional to allow residents to request help even without an active alert
+  alert: { type: mongoose.Schema.Types.ObjectId, ref: 'Alert', required: false },
   resident: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   address: { type: String },
   location: {
-    type: { type: String, enum: ['Point'] },
-    coordinates: { type: [Number] } // [lng, lat]
+    type: { type: String, enum: ['Point'] }
   },
   notes: { type: String },
   status: { type: String, enum: ['pending','accepted','completed','cancelled'], default: 'pending' },

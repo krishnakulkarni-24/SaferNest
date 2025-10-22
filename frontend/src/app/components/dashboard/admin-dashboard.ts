@@ -44,7 +44,11 @@ export class AdminDashboardComponent implements OnInit {
   constructor(public auth: AuthService, private alertsService: AlertService) {}
 
   ngOnInit(): void {
-    this.alertsService.getAlerts().subscribe({ next: (data) => this.alerts = data });
+    // Show only active alerts on the admin dashboard overview
+    this.alertsService.getAlerts({ active: 'true' }).subscribe({
+      next: (data) => this.alerts = data,
+      error: (err) => console.error('Error loading admin dashboard alerts', err)
+    });
   }
 
   trackById(index: number, item: any) { return item?._id || index; }
