@@ -17,15 +17,21 @@ const __dirname = path.dirname(__filename);
 // --- Middleware ---
 app.use(express.json());
 
-// CORS: allow Angular dev server and handle preflight with Authorization header
+// CORS: allow all origins (reflect request origin) and handle preflight
+// This is safe since we use bearer tokens, not cookies. If you later use cookies,
+// keep credentials: true and ensure trusted origins only.
 const corsOptions = {
-  origin: [
-    "http://localhost:4200",
-    "http://127.0.0.1:4200",
-  ],
+  origin: (origin, callback) => callback(null, true), // reflect any origin
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Requested-With",
+    "Accept",
+    "Origin"
+  ],
+  optionsSuccessStatus: 204,
 };
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
