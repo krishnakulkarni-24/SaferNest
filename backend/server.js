@@ -17,8 +17,18 @@ const __dirname = path.dirname(__filename);
 // --- Middleware ---
 app.use(express.json());
 
-
-app.use(cors({ credentials: true }));
+// CORS: allow Angular dev server and handle preflight with Authorization header
+const corsOptions = {
+  origin: [
+    "http://localhost:4200",
+    "http://127.0.0.1:4200",
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 // --- MongoDB connection ---
 mongoose
   .connect(process.env.MONGO_URI||'mongodb://localhost:27017/safernest' )
