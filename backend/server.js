@@ -52,7 +52,7 @@ app.use("/api/alerts", alertRoutes);
 app.use("/api/help-requests", helpRequestRoutes);
 app.use("/api/contact", contactRoutes);
 
-const frontendPath = path.join(__dirname, "public", "browser");
+const frontendPath = path.join(__dirname, "public/browser");
 app.use(express.static(frontendPath));
 
 // Serve Angular for non-API routes only
