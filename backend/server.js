@@ -55,7 +55,8 @@ app.use("/api/contact", contactRoutes);
 const frontendPath = path.join(__dirname, "public", "browser");
 app.use(express.static(frontendPath));
 
-app.get("*", (req, res) => {
+// Serve Angular for non-API routes only
+app.get(/^\/(?!api).*/, (req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
 
