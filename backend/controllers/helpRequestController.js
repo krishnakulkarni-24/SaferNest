@@ -5,6 +5,7 @@ import Alert from '../models/alertModel.js';
 export const createHelpRequest = async (req, res) => {
   try {
     const { alertId, address, location, notes } = req.body;
+
     console.log('[HelpRequest] create', { hasAlertId: !!alertId, address: !!address, hasLocation: !!(location && location.coordinates), notes: !!notes });
 
     const helpData = {
@@ -26,7 +27,6 @@ export const createHelpRequest = async (req, res) => {
         console.warn('[HelpRequest] alert lookup error — proceeding without linking');
       }
     }
-
     // Only include location if it's provided with valid coordinates
     if (location && location.coordinates && Array.isArray(location.coordinates) && location.coordinates.length === 2) {
       helpData.location = location;

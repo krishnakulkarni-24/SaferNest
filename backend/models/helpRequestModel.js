@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const helpRequestSchema = new mongoose.Schema({
   // Alert is optional to allow residents to request help even without an active alert
-  alert: { type: mongoose.Schema.Types.ObjectId, ref: 'Alert', required: false },
+  alert: { type: mongoose.Schema.Types.ObjectId, ref: 'Alert' },
   resident: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   address: { type: String },
   location: {

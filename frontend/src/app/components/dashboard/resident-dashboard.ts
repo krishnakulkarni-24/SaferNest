@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { HelpRequestService } from '../../services/help-request.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-resident-dashboard',
@@ -22,50 +22,49 @@ import { HelpRequestService } from '../../services/help-request.service';
         </div>
       </div>
 
-      <div class="section">
-        <div class="card">
-          <h3 style="margin-top:0">Request Help</h3>
-          <p class="muted">Need assistance even if there is no active alert? Submit your request here.</p>
-          <form (ngSubmit)="submitHelp()" #helpForm="ngForm" style="display:grid; gap:8px; max-width:520px;">
-            <label>
-              <div>Address</div>
-              <input name="address" [(ngModel)]="help.address" placeholder="Your address (optional)" />
-            </label>
-            <label>
-              <div>Notes</div>
-              <textarea name="notes" [(ngModel)]="help.notes" rows="3" placeholder="Describe the assistance you need"></textarea>
-            </label>
-            <div style="display:flex; gap:8px; align-items:center;">
-              <button type="submit">Submit Help Request</button>
-              <span class="muted" *ngIf="success">Submitted.</span>
-              <span style="color: var(--danger);" *ngIf="error">{{ error }}</span>
-            </div>
-          </form>
+      <!-- Embedded Request Help card so residents can submit without navigating -->
+      <div class="help-card" style="margin-top:20px">
+        <h2 class="help-title">Request Help</h2>
+        <p class="help-sub">Need assistance even if there is no active alert? Submit your request here.</p>
+
+        <label class="field-label">Address</label>
+        <input class="field-input" placeholder="Your address (optional)" [(ngModel)]="newRequest.address" />
+
+        <label class="field-label">Notes</label>
+        <textarea class="field-textarea" placeholder="Describe the assistance you need" rows="4" [(ngModel)]="newRequest.notes"></textarea>
+
+        <div style="margin-top:16px">
+          <button class="submit-btn" (click)="submitNewRequest()">Submit Help Request</button>
         </div>
+
+        <div *ngIf="formError" class="form-error">{{ formError }}</div>
+        <div *ngIf="formSuccess" class="form-success">{{ formSuccess }}</div>
       </div>
     </div>
   `
 })
 export class ResidentDashboardComponent {
-  help: any = { address: '', notes: '' };
-  success = false;
-  error = '';
+  newRequest: any = { address: '', notes: '' };
+  formError = '';
+  formSuccess = '';
+
   constructor(public auth: AuthService, private helpService: HelpRequestService) {}
 
-  submitHelp() {
-    this.success = false;
-    this.error = '';
-    const payload: any = {};
-    if ((this.help.address || '').trim()) payload.address = (this.help.address || '').trim();
-    if ((this.help.notes || '').trim()) payload.notes = (this.help.notes || '').trim();
-
+  submitNewRequest() {
+    this.formError = '';
+    this.formSuccess = '';
+    const payload: any = {
+      address: this.newRequest.address || undefined,
+      notes: this.newRequest.notes || undefined
+    };
     this.helpService.create(payload).subscribe({
-      next: () => {
-        this.success = true;
-        this.help = { address: '', notes: '' };
+      next: (res) => {
+        this.formSuccess = (res as any)?.message || 'Help request submitted';
+        this.newRequest = { address: '', notes: '' };
       },
       error: (err) => {
-        this.error = err?.error?.message || 'Failed to submit help request';
+        console.error('Failed to submit help request', err);
+        this.formError = err?.error?.message || 'Failed to submit help request.';
       }
     });
   }

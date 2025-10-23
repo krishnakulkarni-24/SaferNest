@@ -1,0 +1,13 @@
+.help-card{background:#fff;border-radius:12px;padding:28px;box-shadow:0 6px 20px rgba(16,24,40,0.08);max-width:980px}
+.help-title{margin:0;font-size:28px}
+.help-sub{color:var(--muted);margin:8px 0 18px}
+.field-label{display:block;color:#6b7280;margin-bottom:6px;font-size:14px}
+.field-input{width:100%;padding:10px 12px;border:1px solid #e6e9ee;border-radius:6px;font-size:14px}
+.field-textarea{width:100%;padding:14px;border:1px solid #e6e9ee;border-radius:12px;font-size:15px;resize:vertical}
+.alert-id{display:none}
+.submit-btn{background:linear-gradient(90deg,#6b6bf6,#9b4df6);color:#fff;padding:14px 18px;border:none;border-radius:12px;font-weight:600;cursor:pointer}
+.form-error{color:#b91c1c;margin-top:8px}
+.form-success{color:#065f46;margin-top:8px}
+.card{background:#fff;border-radius:8px;padding:14px;box-shadow:0 2px 6px rgba(16,24,40,0.04)}
+
+@media (min-width:900px){.help-card{padding:36px}}

@@ -24,7 +24,8 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.auth.getUser();
-    this.alertService.getAlerts().subscribe({
+    // fetch only active alerts by default
+    this.alertService.getAlerts({ active: 'true' }).subscribe({
       next: (data: any[]) => (this.alerts = data)
     });
   }
