@@ -118,6 +118,11 @@ export class AlertsComponent implements OnInit {
     });
   }
 
+  isVolunteerAccepted(alert: any): boolean {
+    const userId = this.auth.getUser()?.id;
+    return !!(alert.volunteersAccepted && alert.volunteersAccepted.some((v: any) => (v._id || v).toString() === userId));
+  }
+
   openHelp(alert: any) {
     this.needHelpAlertId = alert._id;
     this.help = { address: '' };
