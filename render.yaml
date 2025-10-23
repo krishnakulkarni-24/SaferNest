@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: safernest-backend
+    env: node
+    plan: free
+    branch: feature/deploy-render
+    buildCommand: |
+      # install frontend deps and build
+      cd frontend
+      npm ci
+      npm run build
+      # install backend deps
+      cd ../backend
+      npm ci
+    startCommand: "cd backend && npm start"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Add secrets in the Render dashboard instead of here
+      # - key: MONGO_URI
+      # - key: JWT_SECRET
