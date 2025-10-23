@@ -5,10 +5,10 @@ services:
     plan: free
     branch: feature/deploy-render
     buildCommand: |
-      # install frontend deps and build
+      # install frontend deps and build using npx to invoke the local Angular CLI
       cd frontend
       npm ci
-      npm run build
+      npx ng build --configuration production
       # install backend deps
       cd ../backend
       npm ci
