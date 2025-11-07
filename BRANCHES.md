@@ -87,7 +87,7 @@ This will automatically delete feature branches after PRs are merged.
 
 ## Summary
 
-**Question**: "Why there are two branches?"
+**Question**: "Why are there two branches?"
 
 **Answer**: After PR #1 was merged, the `feature/deploy-render` branch was not deleted. New commits were added to it, creating a second PR from the same branch. This is not a best practice and can lead to confusion. The solution is to:
 - Merge or close PR #2 
