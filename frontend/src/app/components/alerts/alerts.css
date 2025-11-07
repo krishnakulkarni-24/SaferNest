@@ -1,0 +1,17 @@
+/* Alerts component styles */
+.controls { padding: 12px; }
+.controls-row { display:flex; gap:12px; flex-wrap:wrap; }
+.control { display:flex; flex-direction:column; }
+.alert-card { margin-top:12px; }
+.alert-header { display:flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap:wrap; }
+.volunteer-actions { margin-top:8px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.resident-actions { margin-top:8px; }
+.help-form { margin-top:8px; }
+.help-form-actions { margin-top:8px; display:flex; gap:8px; }
+.admin-actions { margin-top:8px; display:flex; gap:8px; flex-wrap:wrap; }
+.edit-form { margin-top:8px; display:grid; gap:8px; }
+.edit-actions { display:flex; gap:8px; }
+.form-error { color: var(--danger); margin-top:6px; }
+
+.deactivated-badge { margin-left: 12px; font-weight: 600; }
+

@@ -32,7 +32,10 @@ import { AlertService } from '../../services/alert.service';
                 <div><strong>{{ a.title }}</strong></div>
                 <div class="muted">Type: {{ a.type }} • Severity: {{ a.severity }}<span *ngIf="a.task?.title"> • Task: {{ a.task.title }}</span></div>
               </div>
-            <div><strong>Accepted:</strong> {{ a.volunteersAccepted?.length || 0 }}</div>
+            <div style="display:flex; gap:12px; align-items:center;">
+              <div><strong>Accepted:</strong> {{ a.volunteersAccepted?.length || 0 }}</div>
+              <button class="btn btn-danger" (click)="confirmDeactivate(a)">Deactivate</button>
+            </div>
           </div>
         </div>
       </div>
@@ -52,6 +55,25 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   trackById(index: number, item: any) { return item?._id || index; }
+
+  confirmDeactivate(alert: any) {
+    const ok = confirm(`Deactivate alert "${alert.title}"? This will mark it inactive.`);
+    if (!ok) return;
+    this.deactivateAlert(alert);
+  }
+
+  deactivateAlert(alert: any) {
+    this.alertsService.deactivateAlert(alert._id).subscribe({
+      next: (res: any) => {
+        // remove from the local list so UI updates immediately
+        this.alerts = this.alerts.filter(a => a._id !== alert._id);
+      },
+      error: (err) => {
+        console.error('Error deactivating alert', err);
+        alert('Failed to deactivate alert.');
+      }
+    });
+  }
 }
 
 

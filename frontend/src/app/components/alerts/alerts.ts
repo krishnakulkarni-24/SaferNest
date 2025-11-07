@@ -35,7 +35,15 @@ export class AlertsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.alertService.getAlerts({ active: 'true' }).subscribe({
+    this.loadAlerts();
+  }
+
+  // Load alerts depending on user role: admins get all alerts (including deactivated),
+  // other users get only active alerts.
+  loadAlerts() {
+    const isAdmin = this.auth.getUser()?.role === 'admin';
+    const params: any = isAdmin ? {} : { active: 'true' };
+    this.alertService.getAlerts(params).subscribe({
       next: (data) => { this.alerts = data; this.applyFilter(); },
       error: (err) => console.error('Error loading alerts', err)
     });
@@ -45,7 +53,9 @@ export class AlertsComponent implements OnInit {
     this.filtered = this.alerts.filter(a => {
       const byType = this.type ? (a.type?.toLowerCase?.() === this.type) : true;
       const bySev = this.severity ? (a.severity?.toLowerCase?.() === this.severity) : true;
-      const byActive = a.active !== false; // default show active
+      // Admins should see deactivated alerts for management; other users see only active alerts
+      const isAdmin = this.auth.getUser()?.role === 'admin';
+      const byActive = isAdmin ? true : (a.active !== false);
       return byType && bySev && byActive;
     });
   }
@@ -97,11 +107,16 @@ export class AlertsComponent implements OnInit {
 
   deactivate(alert: any) {
     this.alertService.deactivateAlert(alert._id).subscribe({
-      next: () => {
-        // Refetch active alerts to ensure UI updates immediately
-        this.alertService.getAlerts({ active: 'true' }).subscribe({
-          next: (data) => { this.alerts = data; this.applyFilter(); }
-        });
+      next: (res: any) => {
+        try {
+          // update the local alert object with server's response (preserves id and other fields)
+          const updated = res?.alert || { ...alert, active: false };
+          const idx = this.alerts.findIndex(a => a._id === alert._id);
+          if (idx >= 0) this.alerts[idx] = updated;
+          this.applyFilter();
+        } catch (e) {
+          console.error('Error applying deactivated alert locally', e);
+        }
       },
       error: (err) => console.error('Failed to deactivate', err)
     });
@@ -110,12 +125,16 @@ export class AlertsComponent implements OnInit {
   acceptTask(alert: any) {
     this.alertService.acceptTask(alert._id).subscribe({
       next: () => {
-        this.alertService.getAlerts({ active: 'true' }).subscribe({
-          next: (data) => { this.alerts = data; this.applyFilter(); }
-        });
+        // Refresh using same rules as initial load (admin vs others)
+        this.loadAlerts();
       },
       error: (err) => console.error('Failed to accept task', err)
     });
+  }
+
+  isVolunteerAccepted(alert: any): boolean {
+    const userId = this.auth.getUser()?.id;
+    return !!(alert.volunteersAccepted && alert.volunteersAccepted.some((v: any) => (v._id || v).toString() === userId));
   }
 
   openHelp(alert: any) {
@@ -135,6 +154,31 @@ export class AlertsComponent implements OnInit {
       error: (err) => {
         console.error('Failed to submit help request', err);
         this.helpError = err?.error?.message || 'Failed to submit help request.';
+      }
+    });
+  }
+
+  confirmDelete(target: any) {
+    // Debug log to verify handler is called
+    console.log('confirmDelete called for', target?._id);
+    const ok = confirm(`Are you sure you want to permanently delete alert "${target.title}"? This cannot be undone.`);
+    if (!ok) return;
+    this.deleteAlert(target);
+  }
+
+  deleteAlert(target: any) {
+    console.log('deleteAlert: calling API for', target?._id);
+    this.alertService.deleteAlert(target._id).subscribe({
+      next: (res) => {
+        console.log('deleteAlert success', res);
+        this.alerts = this.alerts.filter(a => a._id !== target._id);
+        this.applyFilter();
+        if (this.editingId === target._id) this.cancelEdit();
+      },
+      error: (err) => {
+        console.error('Failed to delete alert', err);
+        // use window.alert to avoid shadowing a local variable named `alert`
+        window.alert('Failed to delete alert. See console for details.');
       }
     });
   }

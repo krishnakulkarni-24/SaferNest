@@ -52,13 +52,11 @@ app.use("/api/alerts", alertRoutes);
 app.use("/api/help-requests", helpRequestRoutes);
 app.use("/api/contact", contactRoutes);
 
-const frontendPath = path.join(__dirname, "public/browser");
-app.use(express.static(frontendPath));
-
-// Serve Angular for non-API routes only
-app.get(/^\/(?!api).*/, (req, res) => {
-  res.sendFile(path.join(frontendPath, "index.html"));
+app.use(express.static(path.join(__dirname, "public/browser")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/browser", "index.html"));
 });
+
 
 
 // --- Start server ---

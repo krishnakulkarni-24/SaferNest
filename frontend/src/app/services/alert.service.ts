@@ -12,4 +12,5 @@ export class AlertService {
   updateAlert(id: string, update: any) { return this.http.put(`${this.base}/${id}`, update); }
   deactivateAlert(id: string) { return this.http.put(`${this.base}/${id}/deactivate`, {}); }
   acceptTask(id: string) { return this.http.post(`${this.base}/${id}/accept`, {}); }
+  deleteAlert(id: string) { return this.http.delete(`${this.base}/${id}`); }
 }
