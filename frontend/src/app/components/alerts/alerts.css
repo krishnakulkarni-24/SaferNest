@@ -13,3 +13,5 @@
 .edit-actions { display:flex; gap:8px; }
 .form-error { color: var(--danger); margin-top:6px; }
 
+.deactivated-badge { margin-left: 12px; font-weight: 600; }
+

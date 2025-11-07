@@ -1,5 +1,5 @@
 <div class="page">
-  <h2 style="margin: 0 0 12px 0">Active Alerts</h2>
+  <h2 class="alerts-heading">Active Alerts</h2>
 
   <div class="card controls">
     <div class="controls-row">
@@ -27,13 +27,14 @@
     </div>
   </div>
 
-  <div *ngIf="filtered.length === 0" class="card" style="margin-top:12px">No matching alerts. Stay safe!</div>
+  <div *ngIf="filtered.length === 0" class="card no-matches">No matching alerts. Stay safe!</div>
     <div *ngFor="let alert of filtered; trackBy: trackById" class="card alert-card">
     <div class="alert-header">
-      <strong style="font-size: 18px;">{{ alert.title }}</strong>
+  <strong class="alert-title">{{ alert.title }}</strong>
+  <span *ngIf="alert.active === false" class="muted deactivated-badge">(Deactivated)</span>
       <span class="muted">Severity: {{ alert.severity }} | Type: {{ alert.type }} <span *ngIf="alert.task?.title">| Task: {{ alert.task.title }}</span> <span *ngIf="alert.volunteersAccepted?.length">| Accepted: {{ alert.volunteersAccepted.length }}</span></span>
     </div>
-    <p style="margin: 8px 0 0 0">{{ alert.message }}</p>
+    <p class="alert-message">{{ alert.message }}</p>
 
     <!-- Volunteer actions -->
   <div *ngIf="auth.getUser()?.role === 'volunteer' && alert.active" class="volunteer-actions">
@@ -62,10 +63,10 @@
       </div>
     </div>
 
-    <!-- Admin actions: Edit / Deactivate -->
+    <!-- Admin actions: Edit / Delete -->
     <div *ngIf="auth.getUser()?.role === 'admin'" class="admin-actions">
-      <button (click)="deactivate(alert)" [disabled]="alert.active === false">Deactivate</button>
-      <button *ngIf="editingId !== alert._id" (click)="beginEdit(alert)">Edit</button>
+      <button type="button" *ngIf="editingId !== alert._id" (click)="confirmDelete(alert)" class="danger">Delete</button>
+      <button type="button" *ngIf="editingId !== alert._id" (click)="beginEdit(alert)">Edit</button>
     </div>
     <div *ngIf="editingId === alert._id" class="edit-form">
       <label>Title</label>

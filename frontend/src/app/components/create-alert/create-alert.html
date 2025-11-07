@@ -1,6 +1,6 @@
 <div class="page">
   <div class="card">
-    <h2 style="margin-top:0">Create New Alert</h2>
+    <h2 class="create-alert-title">Create New Alert</h2>
     <form (ngSubmit)="submit()" [formGroup]="form">
       <label>Title</label>
       <input formControlName="title" required placeholder="Enter alert title" title="Alert Title" />
@@ -25,18 +25,18 @@
         <option value="critical">Critical</option>
       </select>
 
-      <h3 style="margin: 16px 0 4px 0">Optional Task</h3>
+  <h3 class="optional-task-title">Optional Task</h3>
       <label>Task Title</label>
       <input formControlName="taskTitle" placeholder="e.g., Distribute relief materials" />
       <label>Task Description</label>
       <textarea formControlName="taskDescription" placeholder="Describe the volunteer task"></textarea>
 
-      <div style="margin-top:16px">
+      <div class="form-actions">
         <button type="submit" [disabled]="form.invalid">Create Alert</button>
       </div>
     </form>
 
-    <div *ngIf="message" class="success-message" style="color: var(--accent); margin-top: 10px;">{{ message }}</div>
-    <div *ngIf="error" class="error-message" style="color: var(--danger); margin-top: 10px;">{{ error }}</div>
+  <div *ngIf="message" class="success-message">{{ message }}</div>
+  <div *ngIf="error" class="error-message">{{ error }}</div>
   </div>
 </div>

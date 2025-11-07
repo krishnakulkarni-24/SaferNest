@@ -97,3 +97,24 @@ export const acceptTask = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+// DELETE /api/alerts/:id  (admin) - hard delete an alert
+export const deleteAlert = async (req, res) => {
+  try {
+    const id = (req.params.id || '').toString().trim();
+    console.log('deleteAlert called, id=', id, 'by user=', req.user && req.user.id);
+    // validate ObjectId
+    const mongoose = await import('mongoose');
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      console.warn('deleteAlert: invalid ObjectId', id);
+      return res.status(400).json({ message: 'Invalid alert id' });
+    }
+    const deleted = await Alert.findByIdAndDelete(id);
+    if (!deleted) return res.status(404).json({ message: 'Alert not found' });
+    // Optionally: cascade-delete related documents (help requests, logs) here
+    return res.json({ message: 'Alert deleted', alert: deleted });
+  } catch (err) {
+    console.error('deleteAlert error:', err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
